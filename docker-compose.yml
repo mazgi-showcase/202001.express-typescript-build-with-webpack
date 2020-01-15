@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+  vscode: # for prettier
+    build:
+      context: Dockerfile.d/vscode
+      args:
+        UID: ${UID:-0}
+        GID: ${GID:-0}
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    user: "${UID:-0}:${GID:-0}"
+    command:
+      - bash
+      - -c
+      - npm install
+  bff:
+    build:
+      context: Dockerfile.d/bff.development
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID:-0}
+        GID: ${GID:-0}
+    working_dir: /workspace
+    volumes:
+      - ./bff:/workspace
+      - ./config.development/bff/config.json:/data/config/bff/config.json:ro
+    ports:
+      - "${BIND_IP_ADDR:-127.0.0.1}:4000:4000"
+    user: "${UID:-0}:${GID:-0}"
+    environment:
+      - BFF_PRIVATE_KEY_PEM_STRING
+      - BFF_PUBLIC_KEY_PEM_STRING
+    command:
+      - bash
+      - -c
+      - |
+        npm install
+        npm run dev

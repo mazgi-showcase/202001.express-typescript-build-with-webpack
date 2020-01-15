@@ -1,0 +1,25 @@
+# /data/config/bff/config.json
+[config]
+skip_core_tasks = true
+min_version = "0.26.0"
+
+[tasks.prepare]
+cwd = "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}/../"
+
+[tasks.build-bff]
+dependencies = [
+  "prepare"
+]
+script = [
+'''
+rm -rf Dockerfile.d/bff/rootfs
+mkdir -p Dockerfile.d/bff/rootfs/
+cp -Rp bff Dockerfile.d/bff/rootfs/workspace
+docker build --no-cache --target production Dockerfile.d/bff
+'''
+]
+
+[tasks.default]
+dependencies = [
+  "build-bff"
+]

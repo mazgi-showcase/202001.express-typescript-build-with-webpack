@@ -1,0 +1,35 @@
+[config]
+skip_core_tasks = true
+min_version = "0.26.0"
+
+[tasks.prepare]
+cwd = "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}/../"
+
+[tasks.create-config-files]
+dependencies = [
+  "prepare"
+]
+condition = { files_not_exist = ["${CARGO_MAKE_WORKING_DIRECTORY}/config.development/bff/config.json"] }
+script = [
+'''
+echo '{}' > ./config.development/bff/config.json
+'''
+]
+
+[tasks.create-dotenv-file.linux]
+dependencies = [
+  "prepare"
+]
+condition = { files_not_exist = ["${CARGO_MAKE_WORKING_DIRECTORY}/.env"] }
+script = [
+'''
+echo "UID=$(id -u)" >> ./.env
+echo "GID=$(id -g)" >> ./.env
+'''
+]
+
+[tasks.default]
+dependencies = [
+  "create-config-files",
+  "create-dotenv-file"
+]
