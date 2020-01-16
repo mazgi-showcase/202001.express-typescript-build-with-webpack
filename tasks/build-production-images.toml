@@ -12,7 +12,8 @@ dependencies = [
 script = [
 '''
 rm -rf Dockerfile.d/bff/rootfs
-mkdir -p Dockerfile.d/bff/rootfs/
+mkdir -p Dockerfile.d/bff/rootfs/data/config/bff
+echo '{}' > Dockerfile.d/bff/rootfs/data/config/bff/config.json
 cp -Rp bff Dockerfile.d/bff/rootfs/workspace
 docker build --no-cache --target production Dockerfile.d/bff
 '''

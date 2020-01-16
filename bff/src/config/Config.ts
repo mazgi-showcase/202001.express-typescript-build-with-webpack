@@ -20,9 +20,8 @@ class Config {
 
     if (isDevelopment) {
       // load development config from the file that mounted by docker-compose.
-      const devConfig = require('webpack').__non_webpack_require__(
-        '/data/config/bff/config.json'
-      )
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const devConfig = require('/data/config/bff/config.json')
       defaultConfig = { ...defaultConfig, ...devConfig }
     }
 
