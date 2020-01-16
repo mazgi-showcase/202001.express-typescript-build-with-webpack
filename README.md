@@ -42,6 +42,12 @@ BIND_IP_ADDR=192.168.0.1
 PUBLIC_IP_ADDR=203.0.113.1
 ```
 
+### Run via Docker Compose
+
+```shellsession
+docker-compose up
+```
+
 ## How to build
 
 ```shellsession
