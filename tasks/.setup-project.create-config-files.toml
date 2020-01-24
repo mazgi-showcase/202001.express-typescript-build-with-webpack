@@ -1,0 +1,22 @@
+[tasks.create-config-files]
+dependencies = [
+  "prepare",
+  "create-dotenv-file"
+]
+# The condition statement line is cannot break.
+condition = { files_not_exist = ["${CARGO_MAKE_WORKING_DIRECTORY}/config.development/bff/config.json"], files_exist = ["${CARGO_MAKE_WORKING_DIRECTORY}/.env"] }
+env_files = [
+  { path = ".env" }
+]
+script_runner = "@duckscript"
+script = [
+'''
+config_version = set "2020.1.0-dev"
+config_server_port = set 4000
+config_server_origin = get_env PUBLIC_IP_ADDR
+config_client_port = set 3000
+
+config = set "{ \"version\": \"${config_version}\", \"server\": { \"port\": ${config_server_port}, \"origins\": [ \"http://${config_server_origin}:${config_client_port}\" ] } }"
+writefile config.development/bff/config.json ${config}
+'''
+]

@@ -1,0 +1,31 @@
+[tasks.create-dotenv-file.linux]
+dependencies = [
+  "prepare"
+]
+condition = { files_not_exist = ["${CARGO_MAKE_WORKING_DIRECTORY}/.env"] }
+script_runner = "@duckscript"
+script = [
+'''
+!include_files ./tasks/.create-dotenv-file.ip_addrs.ds
+
+ret_uid = exec id -u
+ret_gid = exec id -g
+uid = set ${ret_uid.stdout}
+gid = set ${ret_gid.stdout}
+
+writefile .env "BIND_IP_ADDR=${bind_ip_addr}\nPUBLIC_IP_ADDR=${public_ip_addr}\nUID=${uid}GID=${gid}"
+'''
+]
+
+[tasks.create-dotenv-file.mac]
+dependencies = [
+  "prepare"
+]
+condition = { files_not_exist = ["${CARGO_MAKE_WORKING_DIRECTORY}/.env"] }
+script_runner = "@duckscript"
+script = [
+'''
+!include_files ./tasks/.create-dotenv-file.ip_addrs.ds
+writefile .env "BIND_IP_ADDR=${bind_ip_addr}\nPUBLIC_IP_ADDR=${public_ip_addr}\nUID=${uid}GID=${gid}"
+'''
+]
